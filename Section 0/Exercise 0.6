@@ -1,0 +1,14 @@
+note over Browser:
+form event listener in spa.js triggers
+new note object creation and sends
+content to the server using the JSON
+content-header type
+end note
+
+Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+Server-->Browser: HTTP Status Code 201 Created
+
+note over Browser:
+browser uses js-code to
+redraw the notes
+end note
