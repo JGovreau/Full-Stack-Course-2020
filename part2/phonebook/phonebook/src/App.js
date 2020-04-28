@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 
 const Filter = ({ value, eventHandler }) => {
@@ -35,31 +36,35 @@ const Persons = ({filteredPersonsArray}) => {
 }
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', phone: '040-123456' },
-    { name: 'Ada Lovelace', phone: '39-44-5323523' },
-    { name: 'Dan Abramov', phone: '12-43-234345' },
-    { name: 'Mary Poppendieck', phone: '39-23-6423122' }
-  ]) 
+  const [ persons, setPersons ] = useState([]) 
   const [ newName, setNewName ] = useState('') // New name input box state
   const [ newPhone, setNewPhone ] = useState('') // New Phone input box state
   const [ searchString, setSearchString] = useState('') // Filter input box state
 
-
   // Filtered persons array state
   const [ filteredPersons, setFilteredPersons ] = useState(persons)
+
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+        setFilteredPersons(response.data)
+      })
+  }
+
+  // Get persons data from the server
+  useEffect(hook, [])
 
 
   // Name input box event handler
   const handleNameInput = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
 
   // Phone input box event handler
   const handlePhoneInput = (event) => {
-    console.log(event.target.value)
     setNewPhone(event.target.value)
   }
 
@@ -84,7 +89,7 @@ const App = () => {
         return
       }
     }
-	
+  
     setPersons(persons.concat(newPerson))
     setFilteredPersons(persons.concat(newPerson))
     setSearchString('')
