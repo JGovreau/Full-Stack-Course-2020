@@ -3,8 +3,11 @@ var morgan = require('morgan')
 var fs = require('fs')
 var path = require('path')
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
+app.use(express.static('build'))
+app.use(cors())
 
 
 // Custom Morgan POST body logger
@@ -120,7 +123,7 @@ app.post('/api/persons/', (request, response) => {
   response.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
