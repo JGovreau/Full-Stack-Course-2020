@@ -136,7 +136,7 @@ const App = () => {
               notify(`Updated ${newName}'s phone number to ${newPhone}`, false)
             })
             .catch(error => {
-              notify(`Information of ${updatedPerson.name} has already been removed from the server`, true)
+              notify(`${error.response.data.error}`, true)
             })
         }
 
@@ -158,7 +158,10 @@ const App = () => {
         setSearchString('')
         setNewName('')
         setNewPhone('')
-        notify(`Added ${personToAdd.name}`, false)
+        notify(`Added person ${personToAdd.name}`, false)
+      })
+      .catch(error => {
+        notify(`${error.response.data.error}`, true)
       })
   }
 
