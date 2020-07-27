@@ -3,16 +3,41 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
-const blog = require('../models/blog')
+const User = require('../models/user')
+const { initialUsers } = require('./test_helper')
+//const usersRouter = require('../controllers/users')
 
 const api = supertest(app)
 
+
+const loginAndRetreiveToken = async (username, password) => {
+
+  //console.log('username: ', username, 'password: ', password)
+  const response = await api
+    .post('/api/login')
+    .send({ username: username, password: password })
+
+  //console.log(response.body)
+  return response.body.token
+}
+
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  for (let user of initialUsers) {
+    await api
+      .post('/api/users')
+      .send({ ...user, password: user.username })
+  }
+
+  const token = await loginAndRetreiveToken("root", "root")
 
   for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
+    await api
+      .post('/api/blogs')
+      .send(blog)
+      .set({ authorization: 'bearer ' + token })
   }
 })
 
@@ -32,8 +57,6 @@ test('correct number of blogs is returned', async () => {
 test('blog unique identifier is named "id"', async () => {
   const response = await api.get('/api/blogs')
 
-  console.log(response.body)
-
   expect(response.body[0].id).toBeDefined()
 })
 
@@ -44,10 +67,13 @@ test('new blogs can be posted successfully', async () => {
     url: "test.com",
     likes: 69420
   }
+
+  const token = await loginAndRetreiveToken("root", "root")
   
   await api
     .post('/api/blogs')
     .send(blogToAdd)
+    .set({ Authorization: "bearer " + token })
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
@@ -65,9 +91,12 @@ test('default likes value is 0', async () => {
     url: "test.com"
   }
 
+  const token = await loginAndRetreiveToken("root", "root")
+
   await api
     .post('/api/blogs')
     .send(blogToAdd)
+    .set({ Authorization: "bearer " + token })
     .expect(200)
     .expect('Content-Type', /application\/json/)
   
@@ -83,8 +112,11 @@ test('POST with no URL fails with 400 Bad Request', async () => {
     author: "Post"
   }
 
+  const token = await loginAndRetreiveToken("root", "root")
+
   await api
     .post('/api/blogs')
+    .set({ Authorization: "bearer " + token })
     .send(noUrlBlog)
     .expect(400)
 })
@@ -95,18 +127,24 @@ test('POST with no title fails with 400 Bad Request', async () => {
     url: "no-title.com"
   }
 
+  const token = await loginAndRetreiveToken("root", "root")
+
   await api
     .post('/api/blogs')
     .send(noTitleBlog)
+    .set({ Authorization: "bearer " + token })
     .expect(400)
 })
 
-test('delete succeeds when existing ID is provided', async () => {
+test('DELETE succeeds when existing ID is provided', async () => {
   const response = await api.get('/api/blogs')
   const blogToDelete = response.body[0]
 
+  const token = await loginAndRetreiveToken("root", "root")
+
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
+    .set({ Authorization: "bearer " + token })
     .expect(204)
   
   const blogsAfterDeletion = await api.get('/api/blogs')
@@ -116,7 +154,7 @@ test('delete succeeds when existing ID is provided', async () => {
   expect(titles).not.toContain(blogToDelete.title)
 })
 
-test('put successfully updates number of likes if provided ID exists', async () => {
+test('PUT successfully updates number of likes if provided ID exists', async () => {
   const response = await api.get('/api/blogs')
   const blogToUpdate = response.body[0]
 
@@ -133,6 +171,21 @@ test('put successfully updates number of likes if provided ID exists', async () 
     expect(updatedBlog.likes).toBe(blogToUpdate.likes + 1)
   
 })
+
+test('POST fails when a token isnt provided', async () => {
+  const blogToAdd = {
+    title: "Test Post Blog",
+    author:"Test",
+    url: "test.com",
+    likes: 69420
+  }
+  
+  await api
+    .post('/api/blogs')
+    .send(blogToAdd)
+    .expect(401)
+
+  })
 
 
 afterAll(() => {
