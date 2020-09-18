@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogCreationForm from './components/BlogCreationForm'
 import UserStatus from './components/UserStatus'
 import blogService from './services/blogs'
+import Togglable from './components/Togglable'
 
 const Notification = ({ notification }) => {
   return notification.isError === true
@@ -18,7 +19,12 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      //setBlogs( blogs )
+      setBlogs(blogs
+        .sort(
+          (a,b) => (a.likes > b.likes) ? -1 : ((b.likes > a.likes) ? 1 : 0)
+        )
+      )
     )  
   }, [])
 
@@ -30,6 +36,8 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogCreationFormRef = useRef()
 
   return (
     <div>
@@ -43,10 +51,17 @@ const App = () => {
       : <div>
           <h2>blogs</h2>
           <UserStatus user={user} setUser={setUser} setNotification={setNotification} />
-          <BlogCreationForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} />
+          <Togglable buttonLabel="Add Note" ref={blogCreationFormRef}>
+            <BlogCreationForm 
+              blogs={blogs}
+              setBlogs={setBlogs}
+              setNotification={setNotification}
+              blogCreationFormRef={blogCreationFormRef}
+            />
+          </Togglable>
           <br/>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />
           )}
         </div>
       }

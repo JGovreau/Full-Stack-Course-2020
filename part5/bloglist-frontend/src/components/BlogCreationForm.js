@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import BlogService from '../services/blogs'
 
-const BlogCreationForm = ({ blogs, setBlogs, setNotification }) => {
+const BlogCreationForm = ({ blogs, setBlogs, setNotification, blogCreationFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -11,6 +11,9 @@ const BlogCreationForm = ({ blogs, setBlogs, setNotification }) => {
 
     try {
       const blog = await BlogService.create({title, author, url})
+
+      // Toggle Blog Creation Form Visibility
+      blogCreationFormRef.current.toggleVisibility()
 
       setBlogs(blogs.concat(blog))
       setTitle('')
@@ -28,7 +31,6 @@ const BlogCreationForm = ({ blogs, setBlogs, setNotification }) => {
       setTimeout(() => {
         setNotification(null)
       }, 5000)
-      //setBlogs(blogs.filter(b => b !== blog))
     }
   }
 
