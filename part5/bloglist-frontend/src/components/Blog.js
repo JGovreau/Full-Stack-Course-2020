@@ -31,7 +31,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {blogState.title}
       <button onClick={toggleVisibility}>View</button>
       {infoIsVisible === true
@@ -50,6 +50,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
       }
     </div>
   )
+
 }
 
 export default Blog

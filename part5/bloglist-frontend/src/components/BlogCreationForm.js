@@ -14,7 +14,7 @@ const BlogCreationForm = ({ blogs, setBlogs, setNotification, blogCreationFormRe
 
       // Toggle Blog Creation Form Visibility
       blogCreationFormRef.current.toggleVisibility()
-
+      console.log(blog)
       setBlogs(blogs.concat(blog))
       setTitle('')
       setAuthor('')
@@ -42,6 +42,7 @@ const BlogCreationForm = ({ blogs, setBlogs, setNotification, blogCreationFormRe
           type="text"
           value={title}
           name="Title"
+          id="Title"
           onChange={({target}) => setTitle(target.value)}
         />
       </div>
@@ -51,6 +52,7 @@ const BlogCreationForm = ({ blogs, setBlogs, setNotification, blogCreationFormRe
           type="text"
           value={author}
           name="Author"
+          id="Author"
           onChange={({target}) => setAuthor(target.value)}
         />
       </div>
@@ -60,6 +62,7 @@ const BlogCreationForm = ({ blogs, setBlogs, setNotification, blogCreationFormRe
           type="text"
           value={url}
           name="URL"
+          id="URL"
           onChange={({target}) => setUrl(target.value)}
         />
       </div>

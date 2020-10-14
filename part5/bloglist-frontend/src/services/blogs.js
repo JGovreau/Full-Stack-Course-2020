@@ -42,6 +42,8 @@ const incrementLikes = async (blog) => {
     url: blog.url
   }
 
+  console.log(incrementedBlog.likes)
+
   const response = await axios.put(`${baseUrl}/${blog.id}`, incrementedBlog)
 
   return response.data
