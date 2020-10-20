@@ -31,19 +31,19 @@ const Blog = ({ blog, blogs, setBlogs }) => {
   }
 
   return (
-    <div style={blogStyle} className="blog">
+    <div style={blogStyle} id="blog" className="blog">
       {blogState.title}
-      <button onClick={toggleVisibility}>View</button>
+      <button id="viewButton" onClick={toggleVisibility}>View</button>
       {infoIsVisible === true
         ? <div>
             <div>{blogState.url}</div>
             <div>
               Likes: {blogState.likes}
-              <button onClick={handleLike}>Like</button>
+              <button id="likeButton" onClick={handleLike}>Like</button>
             </div>
             <div>{blogState.author}</div>
             <div>
-              <button onClick={handleDeletion}>Delete</button>
+              <button id="deleteButton" onClick={handleDeletion}>Delete</button>
             </div>
           </div>
         : <div></div>

@@ -51,7 +51,7 @@ const App = () => {
       : <div>
           <h2>blogs</h2>
           <UserStatus user={user} setUser={setUser} setNotification={setNotification} />
-          <Togglable buttonLabel="Add Note" ref={blogCreationFormRef}>
+          <Togglable buttonLabel="Add Blog" ref={blogCreationFormRef}>
             <BlogCreationForm 
               blogs={blogs}
               setBlogs={setBlogs}
