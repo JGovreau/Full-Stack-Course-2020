@@ -1,11 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification, clearNotification } from '../reducers/notificationReducer'
+import { incrementAnecdote } from '../reducers/anecdoteReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => {
@@ -18,10 +15,10 @@ const AnecdoteList = () => {
   const dispatch = useDispatch()
 
   const vote = async (id, content) => {
-    dispatch(voteAnecdote(id))
-    dispatch(setNotification(`Voted: ${content}`))
-    await sleep(5000)
-    dispatch(clearNotification())
+    dispatch(incrementAnecdote(id))
+
+    // Notification logic
+    dispatch(setNotification(`Voted: ${content}`, 5))
   }
 
   return (
@@ -30,7 +27,7 @@ const AnecdoteList = () => {
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
-            {anecdote.content}
+            {anecdote.content} / {anecdote.id}
           </div>
           <div>
             has {anecdote.votes}

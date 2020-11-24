@@ -1,11 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { newAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification, clearNotification } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -16,10 +13,11 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
 
+    // Update the frontend with the new anecdote information
     dispatch(newAnecdote(content))
-    dispatch(setNotification(`Created anecdote: ${content}`))
-    await sleep(5000)
-    dispatch(clearNotification())
+
+    // Notification logic
+    dispatch(setNotification(`Created anecdote: ${content}`, 5))
 
   }
 
