@@ -12,22 +12,23 @@ const notificationReducer = (state = '', action) => {
   }
 }
 
-function sleep(s) {
-  return new Promise(resolve => setTimeout(resolve, s*1000));
-}
+let timeout
 
 export const setNotification = (message, seconds) => {
   return async dispatch => {
+
+    clearTimeout(timeout)
+    
     dispatch({
       type: 'SET_NOTIFICATION',
       data: message
     })
 
-    await sleep(seconds)
-
-    dispatch({
-      type: 'CLEAR_NOTIFICATION'
-    })
+    timeout = setTimeout(() => dispatch({
+        type: 'CLEAR_NOTIFICATION'
+      }),
+      seconds*1000
+    )
   }
 }
 
