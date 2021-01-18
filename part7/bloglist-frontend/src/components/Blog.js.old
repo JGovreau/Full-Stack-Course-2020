@@ -1,0 +1,66 @@
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteBlog, incrementLikes } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
+
+const Blog = ({ id }) => {
+
+  const dispatch = useDispatch()
+
+  // Get blog from the redux store
+  const blog = useSelector(state => state.blogs.find(b => b.id === id))
+  
+  // CSS Style for blogs
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+
+  // Visibility/View state management
+  const [infoIsVisible, setInfoVisibility] = useState(false)
+
+  // Function called when View button is clicked
+  const toggleVisibility = () => {
+    setInfoVisibility(!infoIsVisible)
+  }
+
+  // Function called when Like button is clicked
+  const handleLike = async () => {
+    dispatch(incrementLikes(blog))
+  }
+
+  // Function called when Delete button is clicked
+  const handleDeletion = async () => {
+    if (window.confirm(`Delete blog: "${blog.title}"?`)) { 
+      dispatch(deleteBlog(blog.id))
+      dispatch(setNotification(`Successfully delete blog "${blog.title}"`, false, 10))
+    }
+  }
+
+  return (
+    <div style={blogStyle} id="blog" className="blog">
+      {blog.title}
+      <button id="viewButton" onClick={toggleVisibility}>View</button>
+      {infoIsVisible === true
+        ? <div>
+            <div>{blog.url}</div>
+            <div>
+              Likes: {blog.likes}
+              <button id="likeButton" onClick={handleLike}>Like</button>
+            </div>
+            <div>{blog.author}</div>
+            <div>
+              <button id="deleteButton" onClick={handleDeletion}>Delete</button>
+            </div>
+          </div>
+        : <div></div>
+      }
+    </div>
+  )
+
+}
+
+export default Blog
