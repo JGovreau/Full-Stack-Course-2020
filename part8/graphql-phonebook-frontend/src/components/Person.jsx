@@ -1,3 +1,4 @@
+
 const Person = ({ person, onClose }) => {
     return (
       <div>
