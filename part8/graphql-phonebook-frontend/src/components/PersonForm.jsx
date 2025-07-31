@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import * as queries from '../queries';
+import ErrorMessage from './ErrorMessage';
 
 const PersonForm = () => {
   const [name, setName] = useState('')
@@ -9,19 +10,19 @@ const PersonForm = () => {
   const [city, setCity] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
 
-  const notifyError = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 10000)
-  };
+  // const notifyError = (message) => {
+  //   setErrorMessage(message)
+  //   setTimeout(() => {
+  //     setErrorMessage(null)
+  //   }, 10000)
+  // };
 
   const [ createPerson ] = useMutation(queries.CREATE_PERSON, {
     refetchQueries: [ { query: queries.ALL_PERSONS }],
     onError: (error) => {
       const messages = error.graphQLErrors.map(e => e.message).join('\n')
-      notifyError(messages);
-      // setErrorMessage(messages)
+      setErrorMessage(messages);
+      // notifyError(messages);
     }
   });
 
@@ -64,20 +65,21 @@ const PersonForm = () => {
         </div>
         <button type='submit'>add!</button>
       </form>
-      <Notify errorMessage={errorMessage} />
+      { errorMessage && <ErrorMessage errorMessage={errorMessage} setErrorMessage={setErrorMessage} />}
+      {/* <Notify errorMessage={errorMessage} /> */}
     </div>
   )
 }
 
-const Notify = ({errorMessage}) => {
-  if ( !errorMessage ) {
-    return null
-  }
-  return (
-    <div style={{color: 'red'}}>
-      {errorMessage}
-    </div>
-  )
-}
+// const Notify = ({errorMessage}) => {
+//   if ( !errorMessage ) {
+//     return null
+//   }
+//   return (
+//     <div style={{color: 'red'}}>
+//       {errorMessage}
+//     </div>
+//   )
+// }
 
 export default PersonForm

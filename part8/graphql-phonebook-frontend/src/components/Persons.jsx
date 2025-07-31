@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import Person from './Person'
 import PersonForm from './PersonForm'
 import * as queries from '../queries';
-
+import PhoneForm from './PhoneForm';
 
 const Persons = ({ persons }) => {
   const [nameToSearch, setNameToSearch] = useState(null)
@@ -34,6 +34,8 @@ const Persons = ({ persons }) => {
       ))}
       <br/>
       <PersonForm />
+      <br/>
+      <PhoneForm />
     </div>
   )
 }
