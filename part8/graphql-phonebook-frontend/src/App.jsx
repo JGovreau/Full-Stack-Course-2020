@@ -3,7 +3,6 @@ import Persons from './components/Persons'
 import * as queries from './queries';
 
 const App = () => {
-  // const result = useQuery(ALL_PERSONS, { pollInterval: 2000 })
   const result = useQuery(queries.ALL_PERSONS)
 
   if (result.loading)  {
