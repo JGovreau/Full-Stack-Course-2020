@@ -113,6 +113,7 @@ const resolvers = {
     personCount: async () => { return Person.collection.countDocuments(); },
     allPersons: async (root, args) => {
       if (!args.phone) {
+        console.log(Person.find({}));
         return Person.find({});
       }
 

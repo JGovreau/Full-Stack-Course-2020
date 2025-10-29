@@ -12,6 +12,7 @@ const Authors = ({ show }) => {
   });
 
   const result = useQuery(ALL_AUTHORS);
+  console.log(result);
 
   const submit = async (event) => {
     event.preventDefault()
