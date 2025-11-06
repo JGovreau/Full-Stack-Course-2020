@@ -87,7 +87,15 @@ const resolvers = {
   Query: {
     bookCount: async () => await Book.collection.countDocuments(),
     authorCount: async () => await Author.collection.countDocuments(),
-    allBooks: async () => await Book.find({}),
+    allBooks: async (root, args) => {
+      if (!args.genre) {
+        return await Book.find({});
+      }
+      const books = await Book.find({ genres: { $in: [args.genre] } });
+      console.log(books);
+      return books;
+      // return await Book.find({ genres: { $in: [args.genre] } });
+    },
     allAuthors: async () => await Author.find({}),
     me: (root, args, context) => context.currentUser
   },
