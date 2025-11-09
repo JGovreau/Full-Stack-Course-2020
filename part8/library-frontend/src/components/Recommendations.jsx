@@ -3,9 +3,7 @@ import { ALL_BOOKS_FILTERED } from "../../queries"
 
 const Recommentations = ({ show, genre }) => {
 
-    if (!show) {
-        return null;
-    }
+    if (!show) { return null; }
 
     const bookRecommendations = useQuery(ALL_BOOKS_FILTERED, { variables: { genre } });
 

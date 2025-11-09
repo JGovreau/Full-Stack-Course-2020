@@ -9,6 +9,7 @@ const Books = (props) => {
   const [allGenres, setAllGenres] = useState([]);
   const [booksToDisplay, setBooksToDisplay] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
+  const [displayedGenre, setDisplayedGenre] = useState("all");
 
   const allBooksResult = useQuery(ALL_BOOKS);
   const [getFilteredBooks] = useLazyQuery(ALL_BOOKS_FILTERED);
@@ -26,17 +27,20 @@ const Books = (props) => {
 
   const handleFilter = async (genre) => {
     if (genre === null) {
+      setDisplayedGenre("all");
       setBooksToDisplay(allBooks);
       return;
     }
 
     const result = await getFilteredBooks({ variables: { genre } });
+    setDisplayedGenre(genre);
     setBooksToDisplay(result.data?.allBooks || []);
   };
 
   return (
     <div>
       <h2>books</h2>
+      <p>Showing <b>{displayedGenre}</b> books</p>
       <table>
         <tbody>
           <tr>
@@ -55,7 +59,7 @@ const Books = (props) => {
       </table>
       <br/>
       <div>
-        {allGenres.map(genre => (
+        { allGenres.map(genre => (
           <button key={genre} onClick={() => handleFilter(genre)}>{genre}</button>
         ))}
         <button onClick={() => handleFilter(null)}>all genres</button>
