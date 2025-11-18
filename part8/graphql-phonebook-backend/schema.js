@@ -18,6 +18,7 @@ const typeDefs = `
     name: String!
     phone: String
     address: Address!
+    friendOf: [User!]!
     id: ID!
   }
 
@@ -50,4 +51,5 @@ const typeDefs = `
     personAdded: Person!
   }
 `
-module.exports = typeDefs
+
+module.exports = typeDefs;
