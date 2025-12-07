@@ -5,7 +5,7 @@ const convertCountDisplay = (count) => {
     if (count < 1000) {
         return String(count);
     } else {
-        return String(count)[0] + '.' + String(count)[1] + 'k';
+        return (count / 1000).toFixed(1) + 'k';
     }
 };
 
