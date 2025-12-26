@@ -23,3 +23,19 @@ query Edges {
 }
 `;
 
+export const USER_SIGN_IN = gql`
+mutation SignIn($username: String!, $password: String!) {
+  authenticate(credentials: { username: $username, password: $password }) {
+    accessToken
+  }
+}
+`;
+
+export const GET_SIGNED_IN_USER = gql`
+query Me {
+  me {
+    username
+    id
+  }
+}
+`;
