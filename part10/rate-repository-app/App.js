@@ -1,4 +1,4 @@
-import Main from './src/components/main.jsx';
+import Main from './src/components/Main.jsx';
 import { NativeRouter } from 'react-router-native';
 import { ApolloProvider } from '@apollo/client/react';
 import createApolloClient from './src/utils/apolloClient';
