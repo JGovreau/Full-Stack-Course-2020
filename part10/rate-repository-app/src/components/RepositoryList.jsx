@@ -3,6 +3,7 @@ import RepositoryItem from './RepositoryItem';
 import theme from '../theme';
 import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from 'react-router-native';
+import ItemSeparator from './ItemSeparator';
 
 const styles = StyleSheet.create({
   separator: {
@@ -13,16 +14,20 @@ const styles = StyleSheet.create({
   }
 });
 
-const ItemSeparator = () => <View style={styles.separator} />;
-
 const RepositoryList = () => {
 
   const navigate = useNavigate();
-  const { repositories } = useRepositories();
+  const { repositories, fetchMore } = useRepositories({ first: 6 });
   const repositoryNodes = repositories ? repositories.edges.map(edge => edge.node) : [];
 
   const handleRepositoryItemPress = (id) => {
     navigate(`/repository/${id}`);
+  };
+
+  const onEndReached = () => {
+    console.log('onEndReached');
+    fetchMore();
+
   };
 
   return (
@@ -32,9 +37,11 @@ const RepositoryList = () => {
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({item, index}) => (
         <Pressable onPress={() => handleRepositoryItemPress(item.id)}>
-          <RepositoryItem key={index} item={item} fullItemDisplay={false} />
+          <RepositoryItem key={index} repositoryItemDetails={item} fullItemDisplay={false} />
         </Pressable>
       )}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
     />
   );
 };

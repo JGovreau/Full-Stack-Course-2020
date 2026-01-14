@@ -8,30 +8,30 @@ import theme from '../theme';
 import Text from './Text';
 import * as Linking from 'expo-linking';
 
-const RepositoryItem = ({item, fullItemDisplay}) => {
+const RepositoryItem = ({repositoryItemDetails, fullItemDisplay}) => {
 
-  const [itemToDisplay, setItemToDisplay] = useState(item ? item : null);
+  // const [itemToDisplay, setItemToDisplay] = useState(item ? item : null);
 
-  const { repositoryId } = useParams();
-  const { fetchRepositoryItem } = useRepositoryItem(repositoryId);
+  // const { repositoryId } = useParams();
+  // const { fetchRepositoryItem } = useRepositoryItem(repositoryId);
 
-  useEffect(() => {
-    if (!itemToDisplay && repositoryId) {
-      fetchRepositoryItem({ variables: { id: repositoryId } }).then(result => {
-        setItemToDisplay(result.data.repository);
-      });
-    }
-  }, [repositoryId]);
+  // useEffect(() => {
+  //   if (!itemToDisplay && repositoryId) {
+  //     fetchRepositoryItem({ variables: { id: repositoryId } }).then(result => {
+  //       setItemToDisplay(result.data.repository);
+  //     });
+  //   }
+  // }, [repositoryId]);
 
   const handleGithubRedirect = () => {
-    Linking.openURL(itemToDisplay.url);
+    Linking.openURL(repositoryItemDetails.url);
   };
 
-  return itemToDisplay
+  return repositoryItemDetails
   ? (
       <View style={{ backgroundColor: 'white', padding: 10, flexDirection: 'column' }}>
-        <RepositoryItemHeader item={itemToDisplay} />
-        <RepositoryItemData item={itemToDisplay} />
+        <RepositoryItemHeader item={repositoryItemDetails} />
+        <RepositoryItemData item={repositoryItemDetails} />
         { fullItemDisplay &&
           <Pressable onPress={handleGithubRedirect}>
             <View style={{ backgroundColor: theme.colors.primaryButtonBackgroundColor, padding: 10, borderRadius: 4, marginTop: 10 }}>

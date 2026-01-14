@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_REPOSITORIES = gql`
-query Edges {
-  repositories {
+query Edges($after: String, $first: Int) {
+  repositories(after: $after, first: $first) {
     edges {
       node {
         createdAt
@@ -18,6 +18,12 @@ query Edges {
         reviewCount
         stargazersCount
       }
+      cursor
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
     }
   }
 }
@@ -70,6 +76,22 @@ query Me {
   me {
     username
     id
+  }
+}
+`;
+
+export const CREATE_REVIEW = gql`
+mutation CreateReview($ownerName: String!, $repositoryName: String!, $rating: Int!, $text: String) {
+  createReview(review: { ownerName: $ownerName, repositoryName: $repositoryName, rating: $rating, text: $text }) {
+    createdAt
+    id
+    repository {
+      id
+      fullName
+      name
+      url
+      ownerName
+    }
   }
 }
 `;
